@@ -9,9 +9,18 @@ jobs:
     steps:
     - name: Check out repository
       uses: actions/checkout@v7
-    - name: Install shellcheck
-      run: |
-        sudo apt update && sudo apt install -y shellcheck
-    - name: Check my-script.sh
-      run: |
-        shellcheck my-script.sh
+    - name: Setup python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.x'
+        check-latest: true
+    - name: Install pre-commit
+      run: pip install pre-commit
+    - name: Run checks
+      run: pre-commit run -a -v
+    - name: Git status
+      if: always()
+      run: git status
+    - name: Full diff
+      if: always()
+      run: git diff
