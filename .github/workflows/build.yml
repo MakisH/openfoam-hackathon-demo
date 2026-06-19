@@ -16,4 +16,4 @@ jobs:
     - name: Build the code
       run: wmake
     - name: Run the code
-      run: ./exe3
+      run: exe3
