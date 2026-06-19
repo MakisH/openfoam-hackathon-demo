@@ -15,3 +15,5 @@ jobs:
         openfoam-version: 2406
     - name: Build the code
       run: wmake
+    - name: Run the code
+      run: ./exe3
