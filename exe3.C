@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
             << nl;
     }
 
-    Info << "XXXXXXXXXXXXXXXX" << endl;
+    Info << "XXXXXXXXXXXXXXXXXXXXX" << endl;
 
     labelList faceCells({3, 9, 3, 14, 9, 9, 25, 14});
 
