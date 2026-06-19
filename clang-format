@@ -1,0 +1,285 @@
+---
+Language:        Cpp
+# BasedOnStyle:  LLVM
+#
+# Proposed clang-format-18 style for OpenFOAM, trying to follow the OpenFOAM style guide:
+#   https://develop.openfoam.com/Development/openfoam/-/wikis/coding/style/style
+# Configuration developed with clang-format-11 for the OpenFOAM-preCICE adapter code:
+#   https://github.com/precice/openfoam-adapter
+# Continuation of development in the OpenFOAM Research-software-engineering SIG
+#   https://gitlab.com/openfoam/community/sig-research-software
+#
+# Contribute to the discussion at the respective OpenFOAM issue:
+#   https://develop.openfoam.com/Development/openfoam/-/issues/1634
+#
+#
+# Keep `public:` at the first indentation level
+AccessModifierOffset: -4
+# Undocumented guideline: align arguments after an open bracket.
+AlignAfterOpenBracket: BlockIndent
+AlignArrayOfStructures: Right
+AlignConsecutiveAssignments: false # TODO: discuss
+AlignConsecutiveBitFields: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: false
+# # Only applies if AllowShortCaseLabelsOnASingleLine is true
+# AlignConsecutiveShortCaseStatements:
+#   Enabled: true
+#   AcrossEmptyLines: false
+#   AcrossComments: true
+#   AlignCaseColons: false/true
+# AlignConsecutiveTableGenBreakingDAGArgColons # likely not relevant to OpenFOAM: Style of aligning consecutive TableGen DAGArg operator colons.
+# AlignConsecutiveTableGenCondOperatorColons # likely not relevant to OpenFOAM: Align the colons of cases inside !cond operators.
+# Style of aligning consecutive TableGen definition colons. This aligns the inheritance colons of consecutive definitions.
+# AlignConsecutiveTableGenDefinitionColons # likely not relevant to OpenFOAM
+AlignEscapedNewlines: Right
+# Align operands after operators (+,*,<<) (see BreakBeforeBinaryOperators)
+AlignOperands: AlignAfterOperator
+# AlignTrailingComments: clang-format 16: this option is not a bool but can be set to the options. Conventional bool options still can be parsed.
+AlignTrailingComments: true
+#   Kind: Always
+#   OverEmptyLines: 0
+AllowAllArgumentsOnNextLine: true
+# AllowAllConstructorInitializersOnNextLine: true # deprecated
+AllowAllParametersOfDeclarationOnNextLine: true
+# AllowBreakBeforeNoexceptSpecifier # TODO
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+# AllowShortCompoundRequirementOnASingleLine
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
+# AlwaysBreakAfterDefinitionReturnType # deprecated
+# Guideline: Splitting return type and function name
+# (this guideline is apparently not strictly followed in OpenFOAM)
+# AlwaysBreakAfterReturnType: All # deprecated -> go to BreakAfterReturnType
+AlwaysBreakBeforeMultilineStrings: false
+# AlwaysBreakTemplateDeclarations: Yes # deprecated
+# AttributeMacros
+
+BinPackArguments: false
+BinPackParameters: false
+# BitFieldColonSpacing
+# Covered by "BreakBeforeBraces"
+# "BreakBeforeBraces" is set to 'Allman', so this is ignored.
+# BraceWrapping:
+#  AfterCaseLabel:  true
+#  AfterClass:      true
+#  AfterControlStatement: Always
+#  AfterEnum:       true
+#  AfterFunction:   true
+#  AfterNamespace:  true
+#  AfterObjCDeclaration: true
+#  AfterStruct:     true
+#  AfterUnion:      true
+#  AfterExternBlock: true
+#  BeforeCatch:     true
+#  BeforeElse:      true
+#  BeforeLambdaBody: true
+#  BeforeWhile:     true
+#  IndentBraces:    true
+#  SplitEmptyFunction: false
+#  SplitEmptyRecord: false
+#  SplitEmptyNamespace: false
+# BracedInitializerIndentWidth
+# BreakAdjacentStringLiterals
+# BreakAfterAttributes
+# BreakAfterJavaFieldAnnotations
+# BreakAfterReturnType # clang-format 19
+# BreakArrays
+# Guideline (almost): Splitting long lines at an = sign. Indent after split.
+# Guideline (almost): Splitting formulae over several lines.
+BreakBeforeBinaryOperators: NonAssignment
+# Always break before braces: if, for, functions, classes, etc.
+BreakBeforeBraces: Allman
+BreakBeforeConceptDeclarations: Always
+# BreakBeforeInheritanceComma: false # deprecated? does not exist
+# BreakBeforeInlineASMColon
+# Guideline (almost): Splitting logical tests over several lines.
+BreakBeforeTernaryOperators: true
+# BreakConstructorInitializersBeforeComma: false # deprecated? does not exist
+# Undocumented guideline (almost): Have the initializer : in a new line.
+BreakConstructorInitializers: BeforeColon
+# BreakFunctionDefinitionParameters
+BreakInheritanceList: BeforeColon
+BreakStringLiterals: true
+# BreakTemplateDeclarations # clang-format 19
+
+# Here we could set the 80 charactes limit, but that would lead to more aggressive changes.
+ColumnLimit:     80
+CommentPragmas:  '^ IWYU pragma:'
+CompactNamespaces: false
+# ConstructorInitializerAllOnOneLineOrOnePerLine: false # deprecated
+ConstructorInitializerIndentWidth: 2 # 2 to reach 4, bc. colon is on 1st line
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+
+# DeriveLineEnding: true # deprecated
+DerivePointerAlignment: false
+DisableFormat:   false
+
+# Undocumented guideline: add line after "public:" etc (since clang-format 12)
+EmptyLineAfterAccessModifier: Always
+EmptyLineBeforeAccessModifier: Always
+ExperimentalAutoDetectBinPacking: false
+
+FixNamespaceComments: false
+# Guideline: Macro loops are like for loops, but without a space.
+ForEachMacros:
+  - forAllIters
+  - forAllConstIters
+  - forAllReverseIters
+  - forAllConstReverseIters
+  - forAll
+  - forAllReverse
+  - forAllIter
+  - forAllConstIter
+
+# IfMacros
+IncludeBlocks:   Preserve
+IncludeCategories:
+  - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
+    Priority:        2
+    SortPriority:    0
+  - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
+    Priority:        3
+    SortPriority:    0
+  - Regex:           '.*'
+    Priority:        1
+    SortPriority:    0
+IncludeIsMainRegex: '(Test)?$'
+IncludeIsMainSourceRegex: ''
+IndentAccessModifiers: false
+IndentCaseBlocks: false
+IndentCaseLabels: false
+IndentExternBlock: AfterExternBlock
+IndentGotoLabels: true
+IndentPPDirectives: None
+# IndentRequiresClause # TODO
+# Guideline: The normal indentation is 4 spaces per logical level.
+IndentWidth:     4
+IndentWrappedFunctionNames: false
+# InsertBraces
+InsertNewlineAtEOF: true
+InsertTrailingCommas: None
+IntegerLiteralSeparator:
+  Binary: 0 # 0 = leave as is
+  Decimal: 3
+  DecimalMinDigits: 5
+  Hex: 0
+
+# JavaImportGroups
+# JavaScriptQuotes
+# JavaScriptWrapImports
+
+KeepEmptyLinesAtEOF: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# LambdaBodyIndentation
+# Language (is at head)
+LineEnding: LF
+
+MacroBlockBegin: '' # TODO
+MacroBlockEnd:   '' # TODO
+# Macros # TODO
+# MainIncludeChar
+# Required to not change code following the guidelines
+# "Leave two empty lines between sections" and
+# "Use two empty lines between functions"
+MaxEmptyLinesToKeep: 4 # this was a wish from M. Olesen (ESI)
+
+NamespaceIndentation: None
+# NamespaceMacros
+
+# ObjCBinPackProtocolList # Auto (the default), delegates to the value in BinPackParameters
+# ObjCBlockIndentWidth
+# ObjCBreakBeforeNestedBlockParam
+# ObjCPropertyAttributeOrder
+# ObjCSpaceAfterProperty
+# ObjCSpaceBeforeProtocolList
+
+# PPIndentWidth # TODO
+PackConstructorInitializers: NextLine
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+# PenaltyBreakOpenParenthesis
+# PenaltyBreakScopeResolution
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
+# PenaltyIndentedWhitespace
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Left
+
+# QualifierAlignment # TODO
+# QualifierOrder # TODO
+
+# RawStringFormats
+ReferenceAlignment: Left
+ReflowComments:  true
+# RemoveBracesLLVM
+# RemoveParentheses
+# RemoveSemicolon
+# RequiresClausePosition
+# RequiresExpressionIndentation
+
+# SeparateDefinitionBlocks # in config 'Always' removes some empty lines
+# ShortNamespaceLines # see 'FixNamespaceComments'
+# SkipMacroDefinitionBody # TODO
+# Do not change the order of include statements (could be catastrophic for OpenFOAM)
+SortIncludes:    false
+# SortJavaStaticImport
+SortUsingDeclarations: Lexicographic
+SpaceAfterCStyleCast: false # makes no difference
+SpaceAfterLogicalNot: false
+# No "template <T>" (guideline already used, but not documented)
+SpaceAfterTemplateKeyword: false
+# SpaceAroundPointerQualifiers # see 'PointerAlignment'
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+# No a{1} (no guideline)
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeJsonColon: false
+# Guideline: Spaces in "if ()", "for ()", but not "forAll ()".
+SpaceBeforeParens: ControlStatementsExceptControlMacros
+# SpaceBeforeParensOptions
+# Guideline: Range-based for should have a space surrounding the ':'.
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+# SpaceInEmptyParentheses: false # this is deprecated
+SpacesBeforeTrailingComments: 1
+SpacesInAngles: Never
+# SpacesInCStyleCastParentheses: false # deprecated
+# SpacesInConditionalStatement: false # deprecated
+# No "arr[3] = [ 1, 2, 3 ]" (no guideline).
+SpacesInContainerLiterals: false
+# SpacesInLineCommentPrefix
+SpacesInParens: Never
+# SpacesInParensOptions
+# SpacesInParentheses: false # deprecated
+SpacesInSquareBrackets: false
+# Treat the code as C++11 or later
+Standard:        Latest
+# StatementAttributeLikeMacros
+StatementMacros:
+
+TabWidth:        4
+# TableGenBreakInsideDAGArg
+# TableGenBreakingDAGArgOperators
+# TypeNames # TODO
+# TypenameMacros
+
+# UseCRLF:         false # deprecated
+# Guideline: No tab characters - only use spaces for indentation.
+UseTab:          Never
+
+# WhitespaceSensitiveMacros: TODO
+WhitespaceSensitiveMacros:
+...

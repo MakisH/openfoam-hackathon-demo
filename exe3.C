@@ -1,126 +1,112 @@
 #include "fvCFD.H"
 
-int main(int argc, char *argv[])
-{
-    HashTable<label> fieldIndex;
+int main(int argc, char *argv[]) {
+  HashTable<label> fieldIndex;
 
-    fieldIndex.insert("p", 0);
-    fieldIndex.insert("U", 1);
-    fieldIndex.insert("T", 2);
-    fieldIndex.insert("k", 7);
-    fieldIndex.insert("epsilon", 15);
+  fieldIndex.insert("p", 0);
+  fieldIndex.insert("U", 1);
+  fieldIndex.insert("T", 2);
+  fieldIndex.insert("k", 7);
+  fieldIndex.insert("epsilon", 15);
 
-    Info << "fieldIndex.size() = " << fieldIndex.size() << endl;
-    Info << "fieldIndex.capacity() = " << fieldIndex.capacity() << endl;
-    Info << "fieldIndex['T'] = " << fieldIndex["T"] << endl;
+  Info << "fieldIndex.size() = " << fieldIndex.size() << endl;
+  Info << "fieldIndex.capacity() = " << fieldIndex.capacity() << endl;
+  Info << "fieldIndex['T'] = " << fieldIndex["T"] << endl;
 
-    // Safer pattern: guard with found().
-    if (fieldIndex.found("k"))
-    {
-        Info<< "patch ID for key \"k\" = " << fieldIndex["k"] << nl;
+  // Safer pattern: guard with found().
+  if (fieldIndex.found("k")) {
+    Info << "patch ID for key \"k\" = " << fieldIndex["k"] << nl;
+  }
+
+  Info << "Iterator for U" << endl;
+  {
+    const HashTable<label>::const_iterator iter = fieldIndex.find("U");
+
+    if (iter.good()) {
+      Info << "Found with find(): " << iter.key() << " -> " << iter.val() << nl;
     }
+  }
 
-    Info << "Iterator for U" << endl;
-    {
-        const HashTable<label>::const_iterator iter = fieldIndex.find("U");
+  {
+    const Switch ok = fieldIndex.set("rho", 42);
 
-        if (iter.good())
-        {
-            Info << "Found with find(): "
-                << iter.key() << " -> " << iter.val() << nl;
-        }
-    }
+    Info << nl << "set(\"rho\", 42) succeeded? " << ok << nl
+         << "Value for \"rho\" is: " << fieldIndex["rho"] << nl;
+  }
 
-    {
-        const Switch ok = fieldIndex.set("rho", 42);
+  {
+    const Switch ok = fieldIndex.insert("U", 99);
 
-        Info<< nl
-            << "set(\"rho\", 42) succeeded? " << ok << nl
-            << "Value for \"rho\" is: "
-            << fieldIndex["rho"] << nl;
-    }
+    Info << nl << "insert(\"U\", 99) succeeded? " << ok << nl
+         << "Value for \"U\" is: " << fieldIndex["U"] << nl;
+  }
 
-    {
-        const Switch ok = fieldIndex.insert("U", 99);
+  {
+    const Switch ok = fieldIndex.set("U", 99);
 
-        Info<< nl
-            << "insert(\"U\", 99) succeeded? " << ok << nl
-            << "Value for \"U\" is: "
-            << fieldIndex["U"] << nl;
-    }
+    Info << nl << "set(\"U\", 99) succeeded? " << ok << nl
+         << "Value for \"U\" is: " << fieldIndex["U"] << nl;
+  }
 
-    {
-        const Switch ok = fieldIndex.set("U", 99);
+  {
+    // Remove an entry.
+    const Switch erased = fieldIndex.erase(
+        "T"); // returns a bool with the success of the operation
 
-        Info<< nl
-            << "set(\"U\", 99) succeeded? " << ok << nl
-            << "Value for \"U\" is: "
-            << fieldIndex["U"] << nl;
-    }
+    Info << "erase(\"T\") removed entry? " << erased << nl;
 
-    {
-        // Remove an entry.
-        const Switch erased = fieldIndex.erase("T");   // returns a bool with the success of the operation
+    Info << "After erase(\"T\"):" << fieldIndex << endl;
+  }
 
-        Info<< "erase(\"T\") removed entry? " << erased << nl;
+  forAllConstIters(fieldIndex, it) {
+    Info << "   " << it.key() << " -> " << it.val() << nl;
+  }
 
-        Info<< "After erase(\"T\"):" << fieldIndex << endl;        
-    }
+  // Key order
+  wordList unsortedKeys = fieldIndex.toc();
+  Info << "unsorted keys = " << unsortedKeys << endl;
 
-    forAllConstIters(fieldIndex, it)
-    {
-        Info<< "   " << it.key() << " -> " << it.val() << nl;
-    }
+  wordList sortedKeys = fieldIndex.sortedToc();
+  Info << "sortedKeys = " << sortedKeys << endl;
 
-    // Key order
-    wordList unsortedKeys = fieldIndex.toc();
-    Info<< "unsorted keys = " << unsortedKeys << endl;
+  Info << "Printed sorted key-value:" << nl;
 
-    wordList sortedKeys = fieldIndex.sortedToc();
-    Info << "sortedKeys = " << sortedKeys << endl;
+  forAll(sortedKeys, i) {
+    const word &key = sortedKeys[i];
 
-    Info << "Printed sorted key-value:" << nl;
+    Info << "   " << key << " -> " << fieldIndex[key] << nl;
+  }
 
-    forAll(sortedKeys, i)
-    {
-        const word& key = sortedKeys[i];
+  Info << "XXXXXXXXXXXXXXXXXXXXX" << endl;
 
-        Info<< "   " << key
-            << " -> " << fieldIndex[key]
-            << nl;
-    }
+  labelList faceCells({3, 9, 3, 14, 9, 9, 25, 14});
 
-    Info << "XXXXXXXXXXXXXXXXXXXXX" << endl;
+  labelHashSet B(faceCells);
 
-    labelList faceCells({3, 9, 3, 14, 9, 9, 25, 14});
+  Info << "labelHashSet(List), sorted = " << B.sortedToc() << nl;
 
-    labelHashSet B(faceCells);
+  const labelHashSet A({3, 4, 9, 25, 40});
 
-    Info<< "labelHashSet(List), sorted = " << B.sortedToc() << nl;
+  // Intersection:
+  // Keep only entries contained in both HashSets.
+  labelHashSet both(A);
+  both &= B;
 
-    const labelHashSet A({3, 4, 9, 25, 40});
+  Info << "intersection = " << both.sortedToc() << nl;
 
-    
-    // Intersection:
-    // Keep only entries contained in both HashSets.
-    labelHashSet both(A);
-    both &= B;
+  // Union:
+  // Keep all entries from both HashSets.
+  labelHashSet either(A);
+  either |= B;
 
-    Info<< "intersection = " << both.sortedToc() << nl;
+  Info << "union = " << either.sortedToc() << nl;
 
-    // Union:
-    // Keep all entries from both HashSets.
-    labelHashSet either(A);
-    either |= B;
+  // Difference:
+  // Keep candidate entries that are not in uniq.
+  labelHashSet onlyCandidate(A);
+  onlyCandidate -= B;
 
-    Info<< "union = " << either.sortedToc() << nl;
+  Info << "difference = " << onlyCandidate.sortedToc() << nl;
 
-    // Difference:
-    // Keep candidate entries that are not in uniq.
-    labelHashSet onlyCandidate(A);
-    onlyCandidate -= B;
-
-    Info<< "difference = " << onlyCandidate.sortedToc() << nl;
-
-    return 0;
+  return 0;
 }
