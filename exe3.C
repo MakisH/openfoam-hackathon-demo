@@ -122,11 +122,5 @@ int main(int argc, char *argv[])
 
     Info<< "difference = " << onlyCandidate.sortedToc() << nl;
 
-
-
-
-    
-
-
     return 0;
 }
