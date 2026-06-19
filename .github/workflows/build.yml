@@ -1,0 +1,19 @@
+name: Build
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v7
+    - name: Set up OpenFOAM
+      uses: gerlero/setup-openfoam@v1
+      with:
+        openfoam-version: 2406
+    - name: Build the code
+      run: wmake
+    - name: Run the code
+      run: exe3
